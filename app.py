@@ -1,10 +1,20 @@
-from flask import Flask, request, jsonify
+import logging
+from flask import Flask, jsonify, render_template, request
 import sqlite3
+
+
 
 
 app = Flask(__name__)
 
+logging.basicConfig(
+    filename='logs.log',               # Specify the log file name
+    level=logging.INFO,               # Set the logging level to INFO
+    format='%(asctime)s - %(levelname)s - %(message)s'  # Define the log message format
+)
 
+
+logging.info('Server Started')
 
 def get_user(user_id):
     con = sqlite3.connect("identifier.sqlite")
@@ -30,12 +40,11 @@ def check_user(email, password):
     return len(rows) != 0
 
 @app.route('/')
-def hello():
-    print("Hello World")
-    return "Hello World"
+def home():
+    return render_template("index.jinja2")
 
 @app.route('/get-user/<user_id>')
-def home(user_id):
+def get_user(user_id):
     user = get_user(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -56,7 +65,12 @@ def create_user():
         return jsonify({"error": "User already exists"}), 400
 
     add_user(data['name'], data['unit'], data['email'], data['password'])
-    return jsonify("User added"), 201
+    return render_template("user_added.jinja2", name=data['name'], password=data['password']), 201
+
+@app.route('/approved', methods = ['GET'])
+def approved():
+    return render_template("user_added.jinja2", name="hello", password="password")
+
 
 if __name__ == '__main__':
     app.run()

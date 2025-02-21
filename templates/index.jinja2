@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Api Server</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>This is Api Home Page</h1>
+        <p>This is a simple Flask application with enhanced CSS styling. Explore and enjoy!</p>
+    </div>
+    <br/>
+    <div align="center" class="container_form">
+        <FORM action = "/approved" method = "POST" >
+            {{value}}
+            <p>Enter your name:</p>
+            <INPUT type="text" name="name" value={{value}}>
+            <p>Enter your password:</p>
+            <INPUT type="password" name="password" value={{value}}>
+            <br/>
+            <br/>
+            <INPUT type = "Submit">
+        </FORM>
+    </div>
+</body>
+</html>

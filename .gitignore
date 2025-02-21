@@ -1,0 +1,5 @@
+.env
+.venv
+README.Docker.md
+.idea
+.logs.log
