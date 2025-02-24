@@ -16,7 +16,7 @@ logging.basicConfig(
 
 logging.info('Server Started')
 
-def get_user(user_id):
+def get_user_from_db(user_id):
     con = sqlite3.connect("identifier.sqlite")
     cur = con.cursor()
     res = cur.execute("SELECT * FROM Users WHERE id = ?", (user_id,)).fetchall()
@@ -45,7 +45,7 @@ def home():
 
 @app.route('/get-user/<user_id>')
 def get_user(user_id):
-    user = get_user(user_id)
+    user = get_user_from_db(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
     user_data = {
@@ -58,7 +58,7 @@ def get_user(user_id):
 @app.route("/post-user/create-user", methods=['POST'])
 def create_user():
     data = request.get_json()
-    if not data:
+    if not data or data['email']=="" and data['password']=="" and data['unit']=="" and data['name'] == "":
         return jsonify({"error": "No data provided"}), 400
 
     if check_user(data['email'], data['password']):

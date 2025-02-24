@@ -25,6 +25,7 @@ services:
     image: ngrok/ngrok:latest
     command:
       - "http"
+      - "--url=${URL}"
       - "http://python_app:8000"  # Use the service name (python_app) instead of localhost
     environment:
       NGROK_AUTHTOKEN: ${API_NGROK}

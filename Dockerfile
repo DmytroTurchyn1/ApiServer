@@ -34,10 +34,12 @@ RUN adduser \
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
 # into this layer.
+COPY . .
+USER root
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
-
+RUN mkdir -p /app && touch /app/logs.log && chmod 666 /app/logs.log
 # Switch to the non-privileged user to run the application.
 USER appuser
 
@@ -46,6 +48,7 @@ COPY . .
 
 # Expose the port that the application listens on.
 EXPOSE 4040
+
 
 # Run the application.
 CMD gunicorn app:app --bind=0.0.0.0:8000
