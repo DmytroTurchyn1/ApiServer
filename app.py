@@ -17,28 +17,29 @@ logging.basicConfig(
 logging.info('Server Started')
 
 def get_user_from_db(user_id):
-    con = sqlite3.connect("identifier.sqlite")
+    con = sqlite3.connect("/app/identifier.sqlite")
     cur = con.cursor()
-    res = cur.execute("SELECT * FROM Users WHERE id = ?", (user_id,)).fetchall()
+    res = cur.execute("SELECT * FROM Users WHERE ID = ?", (user_id,)).fetchall()
     con.close()
     return res
 
 def add_user(name, unit, email, password):
-    con = sqlite3.connect("identifier.sqlite")
+    con = sqlite3.connect("/app/identifier.sqlite")
     cur = con.cursor()
-    cur.execute("INSERT INTO Users (name, unit, email, password) VALUES (?, ?, ?, ?)",
+    cur.execute("INSERT INTO Users (Name, Unit, Email, Password) VALUES (?, ?, ?, ?)",
                 (name, unit, email, password))
     con.commit()
     con.close()
 
 def check_user(email, password):
-    con = sqlite3.connect("identifier.sqlite")
+    con = sqlite3.connect("/app/identifier.sqlite")
     cur = con.cursor()
-    rows = cur.execute("SELECT * FROM Users WHERE email = ? AND password = ?",
+    rows = cur.execute("SELECT * FROM Users WHERE Email = ? AND Password = ?",
                        (email, password)).fetchall()
     con.close()
     return len(rows) != 0
-
+    #chmod 777 /app/identifier.sqlite
+    #chown appuser:appuser /app/identifier.sqlite
 @app.route('/')
 def home():
     return render_template("index.jinja2")
@@ -65,7 +66,7 @@ def create_user():
         return jsonify({"error": "User already exists"}), 400
 
     add_user(data['name'], data['unit'], data['email'], data['password'])
-    return render_template("user_added.jinja2", name=data['name'], password=data['password']), 201
+    return render_template("user_added.jinja2", name=data['name'], password=data['password'], email=data['email'], unit=data['unit']), 201
 
 @app.route('/approved', methods = ['GET'])
 def approved():

@@ -3,3 +3,5 @@
 README.Docker.md
 .idea
 .logs.log
+sqlite_viewer.sh
+build_docker.sh

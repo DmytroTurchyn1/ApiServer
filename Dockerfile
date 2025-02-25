@@ -35,16 +35,23 @@ RUN adduser \
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
 # into this layer.
 COPY . .
+
 USER root
+# Install dependencies using cache and bind mount for requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
+
+
+# Create log file and update permissions
 RUN mkdir -p /app && touch /app/logs.log && chmod 666 /app/logs.log
+
+RUN chown -R appuser:appuser /app && chmod 777 /app
+
+RUN chmod 666 /app/identifier.sqlite && chmod +x /app/sqlite_viewer.sh
 # Switch to the non-privileged user to run the application.
 USER appuser
 
-# Copy the source code into the container.
-COPY . .
 
 # Expose the port that the application listens on.
 EXPOSE 4040

@@ -16,6 +16,7 @@ services:
       - "8000:8000"  # Exposing Flask on port 8000
     networks:
       - main-internal-net
+
     depends_on:
       - ngrok
     entrypoint: >
@@ -26,13 +27,13 @@ services:
     command:
       - "http"
       - "--url=${URL}"
-      - "http://python_app:8000"  # Use the service name (python_app) instead of localhost
+      - "http://python_app:8000"
     environment:
       NGROK_AUTHTOKEN: ${API_NGROK}
     ports:
-      - "4040:4040"  # Exposing ngrok web interface on port 4040
+      - "4040:4040"
     networks:
-      - main-internal-net  # Make sure both containers are on the same network
+      - main-internal-net
 
 networks:
   main-internal-net:
